@@ -22,6 +22,7 @@ int main(int argc, char *argv[argc+1]) {
   if (addr) {
     printf("i haz cat, it is at: %p\n", (void*)addr);
   }
+  printf("test");
   dictionary_close(dict);
   return EXIT_SUCCESS;
 }

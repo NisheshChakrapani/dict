@@ -11,7 +11,7 @@
 #include "dict.h"
 
 struct dict_item {
-  // Each word is at most 100 bytes.
+  // Each word is at most 100 bytes.`
   char word[100];
   // The length of each word.
   size_t len;
@@ -50,7 +50,7 @@ size_t dictionary_len(struct dict_t *dict) {
 // Open the underlying path (dict->path), ftruncate it to the appropriate length
 // (dictionary_len), then mmap it.
 int dictionary_open_map(struct dict_t *dict) {
-  int fd = open(dict->path, O_CREAT | O_RDWR | O_TRUNC | S_IRWXU);
+  int fd = open(dict->path, O_CREAT | O_RDWR | O_TRUNC | S_IRUSR);
   if (fd == -1) {
     perror("Could not open file");
     return 0;
@@ -65,6 +65,7 @@ int dictionary_open_map(struct dict_t *dict) {
     perror("Could not map file");
     return 0;
   }
+  dict->base = base;
   dict->fd = fd;
   return 1;
 }

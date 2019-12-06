@@ -6,7 +6,6 @@
 #include "dict.h"
 
 int main(int argc, char *argv[argc+1]) {
-  //hello
   struct dict_t *dict = dictionary_new(argv[2], 5e5);
   if (!strcmp(argv[1], "gen")) {
     if (dictionary_generate(dict, argv[3]) < 0) {

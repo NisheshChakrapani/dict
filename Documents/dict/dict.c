@@ -116,7 +116,7 @@ void dictionary_close(struct dict_t *dict) {
 // returns pointer to word if it exists, null otherwise
 char* dictionary_exists(struct dict_t *dict, char *word) {
   for (int i = 0; i < dict->num_items; i++) {
-    if (strcmp(base[i]->word, word)) {
+    if (strcmp(dict->base[i].word, word)) {
       char* wordPointer = base[i]->word;
     }
   }
@@ -127,7 +127,7 @@ char* dictionary_exists(struct dict_t *dict, char *word) {
 int dictionary_larger_than(struct dict_t *dict, size_t n) {
   int count = 0;
   for (int i = 0; i < dict->num_items; i++) {
-    if (base[i]->len > n) {
+    if (dict->base[i].len > n) {
       count++;
     }
   }
@@ -138,7 +138,7 @@ int dictionary_larger_than(struct dict_t *dict, size_t n) {
 int dictionary_smaller_than(struct dict_t *dict, size_t n) {
   int count = 0;
   for (int i = 0; i < dict->num_items; i++) {
-    if (base[i]->len < n) {
+    if (dict->base[i].len < n) {
       count++;
     }
   }
@@ -149,7 +149,7 @@ int dictionary_smaller_than(struct dict_t *dict, size_t n) {
 int dictionary_equal_to(struct dict_t *dict, size_t n) {
   int count = 0;
   for (int i = 0; i < dict->num_items; i++) {
-    if (base[i]->len == n) {
+    if (dict->base[i].len == n) {
       count++;
     }
   }

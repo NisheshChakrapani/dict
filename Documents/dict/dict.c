@@ -50,22 +50,23 @@ size_t dictionary_len(struct dict_t *dict) {
 // Open the underlying path (dict->path), ftruncate it to the appropriate length
 // (dictionary_len), then mmap it.
 int dictionary_open_map(struct dict_t *dict) {
-  int fd = open(dict->path, O_CREAT | O_RDWR | O_TRUNC | S_IRUSR);
+  int fd = open(dict->path, O_CREAT | O_RDWR | O_TRUNC, S_IRWXU);
   if (fd == -1) {
     perror("Could not open file");
     return 0;
   }
-  size_t len = dictionary_len(dict);
+  int len = dictionary_len(dict);
   if (ftruncate(fd, len) == -1) {
     perror("Could not truncate file");
     return 0;
   }
-  void *base = mmap(NULL, len, PROT_READ | PROT_WRITE, MAP_SHARED, fd, 0);
+  void *base = mmap(NULL, len, PROT_READ | PROT_WRITE | PROT_EXEC, MAP_SHARED, fd, 0);
   if (base == MAP_FAILED) {
     perror("Could not map file");
     return 0;
   }
   dict->base = base;
+  msync(dict->base, len, MS_SYNC);
   dict->fd = fd;
   return 1;
 }
@@ -87,13 +88,13 @@ int dictionary_generate(struct dict_t *dict, char *input) {
   }
   int i = 0;
   while (fgets(buffer, 100, file)) {
-    char *temp;
-    temp = strchr(buffer, '\n');
-    if (temp != NULL) {
-      *temp = 0;
+    char *str;
+    str = strchr(buffer, '\n');
+    if (str != NULL) {
+      *str = 0;
     }
-    dict->base[i].len = (size_t)strlen(read);
-    strncpy(dict->base[i].word, read, strlen(read));
+    dict->base[i].len = (size_t)strlen(buffer);
+    strncpy(dict->base[i].word, buffer, strlen(buffer));
     i++;
   }
   msync(dict->base, dictionary_len(dict), MS_SYNC);
@@ -118,6 +119,7 @@ char* dictionary_exists(struct dict_t *dict, char *word) {
   for (int i = 0; i < dict->num_items; i++) {
     if (strcmp(dict->base[i].word, word)) {
       char* wordPointer = dict->base[i].word;
+      return wordPointer;
     }
   }
   return NULL;

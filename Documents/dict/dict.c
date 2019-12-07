@@ -32,7 +32,7 @@ struct dict_t {
 // Construct a new dict_t struct.
 // data_file is where to write the data,
 // num_items is how many items this data file should store.
-struct dict_t* dictionary_new(char *data_file, size_t num_items) {
+struct dict_t *dictionary_new(char *data_file, size_t num_items) {
   struct dict_t *my_dict;
   my_dict = malloc(sizeof(my_dict));
   my_dict->path = data_file;
@@ -60,7 +60,8 @@ int dictionary_open_map(struct dict_t *dict) {
     perror("Could not truncate file");
     return 0;
   }
-  void *base = mmap(NULL, len, PROT_READ | PROT_WRITE | PROT_EXEC, MAP_SHARED, fd, 0);
+  void *base =
+      mmap(NULL, len, PROT_READ | PROT_WRITE | PROT_EXEC, MAP_SHARED, fd, 0);
   if (base == MAP_FAILED) {
     perror("Could not map file");
     return 0;
@@ -110,15 +111,13 @@ int dictionary_load(struct dict_t *dict) {
 
 // Unmaps the given dictionary.
 // Free/destroy the underlying dict. Does NOT delete the database file.
-void dictionary_close(struct dict_t *dict) {
-  munmap(dict, dict->num_items);
-}
+void dictionary_close(struct dict_t *dict) { munmap(dict, dict->num_items); }
 
 // returns pointer to word if it exists, null otherwise
-char* dictionary_exists(struct dict_t *dict, char *word) {
+char *dictionary_exists(struct dict_t *dict, char *word) {
   for (int i = 0; i < dict->num_items; i++) {
     if (strcmp(dict->base[i].word, word)) {
-      char* wordPointer = dict->base[i].word;
+      char *wordPointer = dict->base[i].word;
       return wordPointer;
     }
   }

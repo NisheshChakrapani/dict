@@ -117,10 +117,10 @@ void dictionary_close(struct dict_t *dict) {
 char* dictionary_exists(struct dict_t *dict, char *word) {
   for (int i = 0; i < dict->num_items; i++) {
     if (strcmp(dict->base[i].word, word)) {
-      char* wordPointer = base[i]->word;
+      char* wordPointer = dict->base[i].word;
     }
   }
-  return null;
+  return NULL;
 }
 
 //// Count of words with len > n
